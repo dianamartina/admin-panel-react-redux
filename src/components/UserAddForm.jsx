@@ -20,38 +20,50 @@ class UserAddForm extends React.Component {
 
     updateIsGoldClient(event) {
         this.setState({isGoldClient: event.target.checked});
-    }
-
+    }  
+         
     render() {
+        
         const {name, email, isGoldClient} = this.state;
 
         return (
+
+            
             <form
-                className="user-add-form"
+                className="app-boxes user-add-form"
                 onSubmit={(event) => this.props.submitAddForm(event, name, email, isGoldClient)}
             >
-                <h2>Adauga utilizatori:</h2>
-                <label htmlFor="name">Nume:</label>
+                <h2 >Add users:</h2>
+
+                <label htmlFor="name">Name:</label>
                 <input
                     type="text"
                     name="name"
                     onChange={(event) => this.updateName(event)}
                 />
+                
                 <label htmlFor="email">Email:</label>
                 <input
                     type="text"
                     name="email"
-                    onChange={(event) => this.updateEmail(event)}
+                    onChange={(event) => {this.updateEmail(event); }}
                 />
-                <label htmlFor="is-gold-client">Client GOLD</label>
+                <label htmlFor="is-gold-client">GOLD Client
                 <input
                     type="checkbox"
                     name="is-gold-client"
                     value="true"
                     onChange={(event) => this.updateIsGoldClient(event)}
                 />
-
-                <input type="submit" value="Introdu utilizatorul"/>
+                </label>
+                <div className="user-add-form-btn-pos">
+                    <input className="user-add-form-btn" type="submit" value="Add user"/>
+                    <input className="user-add-form-btn btn-clear" type="reset" value="Clear data" 
+                    onClick={(event) => {this.props.clearItems(event,name, email, isGoldClient);  
+                        this.setState({name: '', email: '', isGoldClient: false});  console.log(this.ref)
+                    }}/>
+                </div>                
+                
             </form>
         )
     }

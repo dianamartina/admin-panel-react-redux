@@ -1,0 +1,6 @@
+.app-boxes.post-list {
+  display: flex;
+  flex-grow: 100;
+  flex-direction: column;
+  padding-left: 30px;
+}

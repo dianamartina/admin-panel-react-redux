@@ -1,0 +1,45 @@
+.user-item {
+  display: flex;
+  align-items: center;
+}
+
+.user-item img {
+  width: 70px;
+  margin-right: 20px;
+}
+
+.user-item-name-email {
+  width: 30%;
+  word-wrap: break-word;
+}
+
+.user-item-salary {
+  width: 80px;
+  text-align: center;
+}
+
+.user-item .user-item-gold-client {
+  width: 100px;
+  margin: 0 auto;
+  /* color: grey; */
+  font-weight: bold;
+}
+
+.user-item .user-item-btn,
+.user-item .user-item-btn:focus {
+  border: 1px solid #999999;
+  background-color: #f2f2f2;
+  border-radius: 3px;
+  font-family: "Roboto", sans-serif;
+  font-size: 15px;
+  color: #222222;
+  width: 100px;
+  padding: 6px;
+  cursor: pointer;
+  transition: all 0.5s;
+  outline: none;
+}
+
+.user-item .user-item-btn:hover {
+  background-color: #dfdfdf;
+}

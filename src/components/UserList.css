@@ -1,0 +1,6 @@
+.user-list {
+  display: inline-flex;
+  flex-grow: 100;
+  display: flex;
+  flex-direction: column;
+}
