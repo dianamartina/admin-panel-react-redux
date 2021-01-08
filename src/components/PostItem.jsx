@@ -6,7 +6,7 @@ function PostItem(props) {
     return(
         <div className="item-border">
             <h3>{title}</h3>
-            <p>{body}</p>           
+            <p>{body}</p>
         </div>
     )
 }

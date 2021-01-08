@@ -2,14 +2,16 @@ import React from 'react';
 import UserList from './components/UserList';
 import PostList from './components/PostList';
 import UserAddForm from './components/UserAddForm';
+import { connect } from "react-redux";
+import {colorChange } from './redux/actions/color-action';
+import {backgroundColorChange } from './redux/actions/color-action';
 import './App.css';
 
 class App extends React.Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.state = {
-      backgroundColor: '#6dbbc0',
-      color:'#222222',
+      backgroundColor: '#531D51',
       users: [],
       posts:[],
       showUsers: true,
@@ -40,18 +42,18 @@ class App extends React.Component {
     this.setState({backgroundColor: event.target.value});
   }
 
-  handleColorChange(event) {
-    this.setState({color:event.target.value});
-  } 
+  // handleColorChange(event) {
+  //   this.setState({color:event.target.value});
+  // } 
 
-  handlerAddUsers() {    
+  handlerAddUsers() {
     this.setState((prevState) => {
       return {users: prevState.users, showUsers: true};
     });
     
   }
 
-  handlerAddPosts() {        
+  handlerAddPosts() {
     this.setState((prevState) => {
       return {posts: prevState.posts, showUsers: false };
     }); 
@@ -104,8 +106,7 @@ class App extends React.Component {
           ]
         }
       });
-      // console.log(this.state); 
-      
+      // console.log(this.state);
     }
   };
 
@@ -122,29 +123,26 @@ class App extends React.Component {
       return user.id !== id//primesc, true userii cu id diferit de cel din delete, acestea vor ajunge in array-ul newUsers
     });
     
-    this.setState({users: newUsers})                   
+    this.setState({users: newUsers})
   }
-
   render() {
-
-   
-
+    const {initialColor, colorChange, initialBackgroundColor, backgroundColorChange} = this.props;
     return(
-      <div className="app" style={{backgroundColor: this.state.backgroundColor, color:this.state.color}}>
+      <div className="app" style={{backgroundColor: initialBackgroundColor, color:initialColor}}>
         <h1>Admin panel </h1>
         {/* Show change background color button */}
         <div className="change-position">
           <div className="change change-bkgcolor">
             <p>Change background</p>
-            <input type="color" onChange={(event) => this.handleBackgroundChange(event)} value={this.state.backgroundColor} />
+            <input type="color" onChange={(event) => backgroundColorChange(event)} value={initialBackgroundColor} />
           </div>  
           {/* Show change font color button */}
           <div className="change change-color">
             <p>Change font color</p>
-            <input type="color" onChange={(event)=> this.handleColorChange(event)} value={this.state.color}/>
+            <input type="color" onChange={(event)=> colorChange(event)} value={initialColor}/>
           </div>  
         </div>  
-                      
+
         <div className="app-btn-position">
          
           <button 
@@ -154,7 +152,7 @@ class App extends React.Component {
 
           <button 
             className={this.state.showUsers === false ? "app-btn-list btn-active" : "app-btn-list btn-not-active"}  
-            onClick={()=> this.handlerAddPosts()}>Show Posts            
+            onClick={()=> this.handlerAddPosts()}>Show Posts
           </button>
 
         </div>
@@ -173,4 +171,25 @@ class App extends React.Component {
   }
 }
 
-export default App;
+function mapStateToProps (state) {
+    console.log(state.colorNew.color);
+  return {
+      initialColor: state.colorNew.color,
+      initialBackgroundColor: state.colorNew.backgroudColor
+  };
+}
+
+function mapDispatchToProps(dispatch) {
+  
+  return {
+      colorChange: (event) => {
+          dispatch(colorChange(event))
+      },
+      backgroundColorChange: (event) => {
+        dispatch(backgroundColorChange(event))
+    },
+    
+  };
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(App);
