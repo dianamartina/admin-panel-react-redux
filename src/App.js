@@ -3,74 +3,81 @@ import UserList from './components/UserList';
 import PostList from './components/PostList';
 import UserAddForm from './components/UserAddForm';
 import { connect } from "react-redux";
-import {colorChange } from './redux/actions/color-action';
-import {backgroundColorChange } from './redux/actions/color-action';
+import {colorChange, backgroundColorChange } from './redux/actions/color-action';
 import './App.css';
+import {addPosts} from './redux/actions/post-action';
+import {addUsers, deleteUser} from './redux/actions/user-action';
+import {showUsersList, showPostsList} from './redux/actions/switch-show-actions';
+
 
 class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      backgroundColor: '#531D51',
-      users: [],
-      posts:[],
-      showUsers: true,
+      // users: [],
+      // posts:[],
+      // showUsers: true,
     };
   }
 
   componentDidMount() {
-    fetch('https://jsonplaceholder.typicode.com/users')
-      .then(response => response.json())
-      .then(users => {
-        const usersFilter = users.filter(user => user.id < 6);
-        users.forEach(user => {
-          user.isGoldClient = false;
-        });
-        this.setState({users: usersFilter});
-      })
 
-      fetch('https://jsonplaceholder.typicode.com/posts')
-        .then(response=> response.json())
-        .then(posts => {
-          const postsFilter = posts.filter(post => post.id < 6);
-          this.setState({posts: postsFilter});
-          // console.log(posts);
-        })
+    const {showPosts, showUsers} = this.props;
+     showPosts();
+     showUsers();
+
+    // fetch('https://jsonplaceholder.typicode.com/users')
+    //   .then(response => response.json())
+    //   .then(users => {
+    //     const usersFilter = users.filter(user => user.id < 6);
+    //     users.forEach(user => {
+    //       user.isGoldClient = false;
+    //     });
+    //     this.setState({users: usersFilter});
+    //   })
+    
+      // fetch('https://jsonplaceholder.typicode.com/posts')
+      //   .then(response=> response.json())
+      //   .then(posts => {
+      //     const postsFilter = posts.filter(post => post.id < 6);
+      //     this.setState({posts: postsFilter});
+      //     // console.log(posts);
+      //   })
   }
 
-   handleBackgroundChange(event) {
-    this.setState({backgroundColor: event.target.value});
-  }
+  //  handleBackgroundChange(event) {
+  //   this.setState({backgroundColor: event.target.value});
+  // }
 
   // handleColorChange(event) {
   //   this.setState({color:event.target.value});
   // } 
 
-  handlerAddUsers() {
-    this.setState((prevState) => {
-      return {users: prevState.users, showUsers: true};
-    });
+  // handlerAddUsers() {
+  //   this.setState((prevState) => {
+  //     return {users: prevState.users, showUsers: true};
+  //   });
     
-  }
+  // }
 
-  handlerAddPosts() {
-    this.setState((prevState) => {
-      return {posts: prevState.posts, showUsers: false };
-    }); 
+  // handlerAddPosts() {
+  //   this.setState((prevState) => {
+  //     return {posts: prevState.posts, showUsers: false };
+  //   }); 
           
-  }
+  // }
 
-  getMaxId(users) {
-    let maxId = 0;
+  // getMaxId(users) {
+  //   let maxId = 0;
 
-    users.forEach(user => {
-      if (user.id > maxId) {
-        maxId = user.id;
-      }
-    });
+  //   users.forEach(user => {
+  //     if (user.id > maxId) {
+  //       maxId = user.id;
+  //     }
+  //   });
 
-    return maxId;
-  }
+  //   return maxId;
+  // }
 
   validationForm(name, email) {
 
@@ -118,15 +125,22 @@ class App extends React.Component {
     });   
   }
   
-  deleteUser(id) {
-    const newUsers = this.state.users.filter((user) => {
-      return user.id !== id//primesc, true userii cu id diferit de cel din delete, acestea vor ajunge in array-ul newUsers
-    });
+  // deleteUser(id) {
+  //   const newUsers = this.state.users.filter((user) => {
+  //     return user.id !== id//primesc, true userii cu id diferit de cel din delete, acestea vor ajunge in array-ul newUsers
+  //   });
     
-    this.setState({users: newUsers})
-  }
+  //   this.setState({users: newUsers})
+  // }
+
   render() {
-    const {initialColor, colorChange, initialBackgroundColor, backgroundColorChange} = this.props;
+
+    const {initialColor, colorChange, initialBackgroundColor, backgroundColorChange,  postData, userData, showUsersList, showPostsList,  showUsersPosts} = this.props;
+    
+    // console.log("==========this.props.showUsersPosts=", showUsersPosts);
+
+    // console.log('===============this.props= '+JSON.stringify(this.props, null, 4))
+
     return(
       <div className="app" style={{backgroundColor: initialBackgroundColor, color:initialColor}}>
         <h1>Admin panel </h1>
@@ -135,7 +149,7 @@ class App extends React.Component {
           <div className="change change-bkgcolor">
             <p>Change background</p>
             <input type="color" onChange={(event) => backgroundColorChange(event)} value={initialBackgroundColor} />
-          </div>  
+          </div>
           {/* Show change font color button */}
           <div className="change change-color">
             <p>Change font color</p>
@@ -146,6 +160,16 @@ class App extends React.Component {
         <div className="app-btn-position">
          
           <button 
+            className={showUsersPosts === true ? "app-btn-list btn-active" : "app-btn-list btn-not-active"} 
+            onClick={()=> showUsersList()}>Show Users
+          </button>
+
+          <button 
+            className={ showUsersPosts === false  ? "app-btn-list btn-active" : "app-btn-list btn-not-active"}  
+            onClick={()=> showPostsList()}>Show Posts
+          </button>
+
+          {/* <button 
             className={this.state.showUsers === true ? "app-btn-list btn-active" : "app-btn-list btn-not-active"} 
             onClick={()=> this.handlerAddUsers()}>Show Users
           </button>
@@ -153,29 +177,36 @@ class App extends React.Component {
           <button 
             className={this.state.showUsers === false ? "app-btn-list btn-active" : "app-btn-list btn-not-active"}  
             onClick={()=> this.handlerAddPosts()}>Show Posts
-          </button>
+          </button> */}
 
         </div>
            
-          {/* Show users or posts */}
-          {this.state.showUsers === true 
+        {/* {console.log("================showUsers=", showUsers)} */}
+        {/* {console.log('userData= '+JSON.stringify(userData[1], null, 4))} */}
+
+          { showUsersPosts === true
+          
           ? <div className="app-boxes-position">
-              <UserAddForm submitAddForm={(event, name, email, isGoldClient) => this.submitAddForm(event, name, email, isGoldClient)} clearItems={( name, email, isGoldClient)=> this.clearItems( name, email, isGoldClient)}/>
-              <UserList users={this.state.users} salary={`1000E`} img="https://images.unsplash.com/photo-1511367461989-f85a21fda167?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=889&q=80" alt="profile" deleteUser={(id)=>this.deleteUser(id)}/>
-            </div>          
-          : <PostList posts={this.state.posts} /> 
-          } 
-        
+              {/* <UserAddForm submitAddForm={(event, name, email, isGoldClient) => this.submitAddForm(event, name, email, isGoldClient)} clearItems={( name, email, isGoldClient)=> this.clearItems( name, email, isGoldClient)}/> */}
+              <UserList users={userData} salary={`1000E`} img="https://images.unsplash.com/photo-1511367461989-f85a21fda167?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=889&q=80" alt="profile" deleteUser={(id)=>this.deleteUser(id)}/>
+            </div>
+          : (<PostList posts={postData} /> )
+          }
       </div>
     );
   }
 }
 
 function mapStateToProps (state) {
-    console.log(state.colorNew.color);
+    // console.log("state.switch.showUsers",state.switch.showUsers);
+
   return {
       initialColor: state.colorNew.color,
-      initialBackgroundColor: state.colorNew.backgroudColor
+      initialBackgroundColor: state.colorNew.backgroudColor,
+      postData: state.post.data,
+      userData: state.user.data,
+      showUsersPosts: state.switch.showUsersPosts
+    
   };
 }
 
@@ -187,8 +218,24 @@ function mapDispatchToProps(dispatch) {
       },
       backgroundColorChange: (event) => {
         dispatch(backgroundColorChange(event))
-    },
-    
+      },      
+      showPosts: () => {
+        dispatch(addPosts())
+      },
+      showUsers: () => {
+        dispatch(addUsers())
+      },
+      deleteUser: (payload) => {
+          dispatch(deleteUser(payload))
+      },      
+      showUsersList: (payload) => {
+        dispatch(showUsersList(payload))
+      },
+      showPostsList: (payload) => {
+        dispatch(showPostsList(payload))
+      },
+
+     
   };
 }
 

@@ -2,8 +2,8 @@ import React from 'react';
 import PostItem from './PostItem';
 import './PostList.css';
 
-function PostList(props) {   
-    const {posts} = props;    
+function PostList(props) {
+    const {posts} = props;
     
     return(
         <div className="app-boxes post-list">
